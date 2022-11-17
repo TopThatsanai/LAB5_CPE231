@@ -312,7 +312,7 @@ $(document).ready( function () {
                         <td class='col-3'>${receipt.customer_code_id}</td>
                         <td class='hide'>${receipt.payment_method}</td>
                         <td class='hide'>${receipt.payment_reference}</td>
-                        <td class='hide'>${receipt.total_receipt}</td>
+                        <td class='hide'>${receipt.total_recieved}</td>
                         <td class='hide'>${receipt.remarks}</td>
 
                     </tr>`;
@@ -407,17 +407,6 @@ $(document).ready( function () {
             });            
         }
     });
-    $('#btnPdf').click(function () {
-        if ($('#txt_ReceiptNo').val() == '<new>') {
-            alert ('กรุณาระบุ Receipt No');
-            return false;
-        }
-        window.open('/receipt/pdf/' + $('#txt_ReceiptNo').val());
-    });
-    $('#btnPrint').click(function () {
-        window.open('/receipt/report');
-    });
-
 });
 
 function lineitem_to_json () {

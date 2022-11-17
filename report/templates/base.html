@@ -18,11 +18,14 @@
     {% block script %}
     {% endblock %} 
 <body>
-    <ul class="nav" style="background-color:#8931BD">
-        <li><a href="/invoice">Invoice Forms</a></li>
-        <li><a href="/receipt">Receipt Forms</a></li>
-        <li><a href="/report">Report</a></li>
-    </ul>
+    <nav class="navbar navbar-expand-sm navbar-dark" style="background-color:#56565F">
+        <!-- Links -->
+            <a class="nav-link" href="/invoice">Inovoice Form</a>
+            <a class="nav-link" href="/receipt">Receipt Forms</a>
+            <a class="nav-link" href="/report">Report</a>
+        
+       
+       </nav> 
     {% block sub_menu %}
     {% endblock %}
 

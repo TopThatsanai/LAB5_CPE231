@@ -69,7 +69,7 @@ class ReceiptDetail(View):
     def get(self, request, pk, pk2):
         receipt_no = pk + "/" + pk2
 
-        receipt = list(Receipt.objects.select_related("custome").filter(receipt_no=receipt_no).values('receipt_no', 'date', 'customer_code', 'payment_method','payment_reference','total_receipt','remarks','customer_code__name'))
+        receipt = list(Receipt.objects.select_related("custome").filter(receipt_no=receipt_no).values('receipt_no', 'created_at', 'customer_code', 'payment_method','payment_reference','total_recieved','remarks','customer_code__name'))
         receiptlineitem = list(ReceiptLineItem.objects.select_related('invoice_no').filter(receipt_no=receipt_no).order_by('item_no').values("item_no","receipt_no","invoice_no","invoice_date","invoice_full_amount","invoice_amount_remain","amount_paid_here"))
 
         data = dict()
@@ -225,7 +225,7 @@ class ReceiptReport(View):
     def get(self, request):
 
         with connection.cursor() as cursor:
-            cursor.execute('SELECT r.receipt_no as "Receipt No", r.date as "Date" ,'
+            cursor.execute('SELECT r.receipt_no as "Receipt No", r.created_at as "Date" ,'
                             'r.customer_code as "Customer Code", c.name as "Customer Name",'
                             'r.payment_method as "Payment Method" , r.payment_reference as "Payment Reference",'
                             'r.total_receipt as "Total Received", r.remarks as "Remarks" '
