@@ -88,11 +88,11 @@ $(document).ready( function () {
                 var i = 1;
                 data.customers.forEach(customer => {    // loop each result of customers to create table rows
                     rows += `
-                    <tr>
-                        <td>${i++}</td>
-                        <td><a class='a_click' href='#'>${customer.customer_code}</a></td>
-                        <td>${customer.name}</td>
-                        <td></td>
+                    <tr class="d-flex">
+                        <td class='col-1'>${i++}</td>
+                        <td class='col-3'><a class='a_click' href='#'>${customer.customer_code}</a></td>
+                        <td class='col-5'>${customer.name}</td>
+                        <td class='col-3'></td>
                         <td class='hide'></td>
                     </tr>`;
                 });
@@ -122,11 +122,11 @@ $(document).ready( function () {
                 var i = 1;
                 data.products.forEach(product => {       // loop each result of products to create table rows
                     rows += `
-                    <tr>
-                        <td>${i++}</td>
-                        <td><a class='a_click' href='#'>${product.code}</a></td>
-                        <td>${product.name}</td>
-                        <td>${formatNumber(product.units)}</td>
+                    <tr class="d-flex">
+                    <td class='col-1'>${i++}</td>
+                    <td class='col-3'><a class='a_click' href='#'>${product.code}</a></td>
+                    <td class='col-5'>${product.name}</td>
+                    <td class='col-3'>${formatNumber(product.units)}</td>
                         <td class='hide'></td>
                     </tr>`;
                 });
@@ -204,11 +204,11 @@ $(document).ready( function () {
                     // Change format date from 01-12-2022 -> 01/12/2022
                     invoice_date = invoice_date.slice(0,10).split('-').reverse().join('/');
                     rows += `
-                    <tr>
-                        <td>${i++}</td>
-                        <td><a class='a_click' href='#'>${invoice.invoice_no}</a></td>
-                        <td>${invoice_date}</td>
-                        <td>${invoice.customer_code_id}</td>
+                    <tr class="d-flex">
+                    <td class='col-1'>${i++}</td>
+                    <td class='col-3'><a class='a_click' href='#'>${invoice.invoice_no}</a></td>
+                    <td class='col-5'>${invoice_date}</td>
+                    <td class='col-3'>${invoice.customer_code_id}</td>
                         <td class='hide'></td>
                     </tr>`;
                 });
