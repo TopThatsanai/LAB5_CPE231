@@ -1,52 +1,66 @@
-{% extends 'invoice/report_base.html' %}
+{% extends 'receipt/report_base.html' %}
 
-{% block title %}Invoice Report{% endblock %}
+{% block title %}Receipt Report{% endblock %}
 
 {% block content %}
-<div class='row'>
-    <div class='col-sm'>
-    Invoice No: {{ invoice.invoice_no }}<br>
+<div id='content'>
+    <div class='row'>
+        <div class='col-sm'>
+        Receipt No: {{ receipt.receipt_no }}<br>
+        </div>
+        <div class='col-sm'>
+        Receipt Date: {{ receipt.receipt_date }}<br>
+        </div>
     </div>
-    <div class='col-sm'>
-    Invoice Date: {{ invoice.date }}<br>
+    <div class='row'>
+        <div class='col-sm'>
+        Customer Code: {{ receipt.customer_code }}<br>
+        </div>
+        <div class='col-sm'>
+        Customer Name: {{ receipt.customer_code__name }}<br>
+        </div>
     </div>
+    <div class='row'>
+        <div class='col-sm'>
+        Payment Medthod: {{ receipt.payment_method__payment_method }}<br>
+        </div>
+        <div class='col-sm'>
+        Payment Reference: {{ receipt.payment_reference }}<br>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-sm'>
+            Remark: {{ receipt.remarks }}<br>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-sm'>
+            Total Received: {{ receipt.total_received }}<br>
+        </div>
+    </div>
+    <table class='table'>
+        <tr>
+            <th>#</th>
+            <th>Invoice No</th>
+            <th>Invoice Date</th>
+            <th>Invoice Full Amount</th>
+            <th>Invoice Amount Remain</th>
+            <th>Amount Paid Here</th>
+        </tr>
+    {% for lineitem in receiptlineitem %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ lineitem.invoice_no }}</td>
+            <td>{{ lineitem.invoice_date }}</td>
+            <td>{{ lineitem.invoice_full_amount }}</td>
+            <td>{{ lineitem.invoice_amount_remain }}</td>
+            <td>{{ lineitem.amount_paid_here }}</td>
+        <tr>
+    {% endfor %}
+        <tr>
+            <td colspan='4'></td>
+            <td align='right'>Total Recevied</td><td >{{ receipt.total_received }}</td>
+        </tr>
+    </table>
 </div>
-<div class='row'>
-    <div class='col-sm'>
-    Customer Code: {{ invoice.customer_code }}<br>
-    </div>
-</div>
-<table class='table'>
-    <tr>
-        <th>#</th>
-        <th>Product Code</th>
-        <th>Product Name</th>
-        <th>Unit Price</th>
-        <th>Quantity</th>
-        <th>Extended Price</th>
-    </tr>
-{% for lineitem in invoicelineitem %}
-    <tr>
-        <td>{{ forloop.counter }}</td>
-        <td>{{ lineitem.product_code }}</td>
-        <td>{{ lineitem.product_code__name }}</td>
-        <td align='right'>{{ lineitem.unit_price }}</td>
-        <td align='right'>{{ lineitem.quantity }}</td>
-        <td align='right'>{{ lineitem.product_total }}</td>
-    <tr>
-{% endfor %}
-    <tr>
-        <td colspan='4'></td>
-        <td align='right'>Total Price</td><td align='right'>{{ invoice.total }}</td>
-    </tr>
-    <tr>
-        <td colspan='4'></td>
-        <td align='right'>VAT</td><td align='right'>{{ invoice.vat }}</td>
-    </tr>
-    <tr>
-        <td colspan='4'></td>
-        <td align='right'>Amount Due</td><td align='right'>{{ invoice.amount_due }}</td>
-    </tr>
-</table>
-
 {% endblock %}

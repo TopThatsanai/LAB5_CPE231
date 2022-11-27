@@ -69,8 +69,8 @@ class ReceiptDetail(View):
     def get(self, request, pk, pk2):
         receipt_no = pk + "/" + pk2
 
-        receipt = list(Receipt.objects.select_related("custome").filter(receipt_no=receipt_no).values('receipt_no', 'date', 'customer_code', 'payment_method','payment_reference','total_receipt','remarks','customer_code__name'))
-        receiptlineitem = list(ReceiptLineItem.objects.select_related('invoice_no').filter(receipt_no=receipt_no).order_by('item_no').values("item_no","receipt_no","invoice_no","invoice_date","invoice_full_amount","invoice_amount_remain","amount_paid_here"))
+        receipt = list(Receipt.objects.select_related("custome").filter(receipt_no=receipt_no).values('receipt_no', 'date', 'customer_code', 'payment_method','payment_reference','total_received','remarks','customer_code__name'))
+        receiptlineitem = list(ReceiptLineItem.objects.select_related('invoice_no').filter(receipt_no=receipt_no).order_by('item_no').values("item_no","receipt_no","invoice_no","invoice_no__date","invoice_no__amount_due","amount_paid_here"))
 
         data = dict()
         data['receipt'] = receipt[0]
@@ -95,6 +95,7 @@ class ReceiptCreate(View):
     def post(self, request):
         data = dict()
         request.POST = request.POST.copy()
+        print(request.POST)
         if Receipt.objects.count() != 0:
             receipt_no_max = Receipt.objects.aggregate(Max('receipt_no'))['receipt_no__max']
             next_receipt_no = receipt_no_max[0:3] + str(int(receipt_no_max[3:7])+1) + "/" + receipt_no_max[8:10]
@@ -109,10 +110,9 @@ class ReceiptCreate(View):
         request.POST['total_receipt'] = reFormatNumber(request.POST['total_receipt'])
         request.POST['remarks'] = (request.POST['remarks'])
         
-
+        print(request.POST)
         form = ReceiptForm(request.POST)
         if form.is_valid():
-            print("dow")
             receipt = form.save()
 
             dict_lineitem = json.loads(request.POST['lineitem'])
@@ -127,6 +127,7 @@ class ReceiptCreate(View):
                     invoice_amount_remain=reFormatNumber(lineitem['invoice_amount_remain']),
                     amount_paid_here=reFormatNumber(lineitem['amount_paid_here'])
                 )
+                print(request.POST)
 
             data['receipt'] = model_to_dict(receipt)
         else:
@@ -194,53 +195,20 @@ class ReceiptDelete(View):
 
         return JsonResponse(data)
 
-class ReceiptPDF(View):
-    def get(self, request, pk, pk2):
+class ReceiptReport(View):
+     def get(self, request, pk, pk2):
         receipt_no = pk + "/" + pk2
-
-        receipt = list(Receipt.objects.select_related("custome").filter(receipt_no=receipt_no).values('receipt_no', 'date', 'customer_code', 'customer_code__name','payment_method','payment_reference','total_receipt','remarks',))
-        receiptlineitem = list(ReceiptLineItem.objects.select_related('invoice_no').filter(receipt_no=receipt_no).order_by('item_no').values("item_no","receipt_no","invoice_no","invoice_date","invoice_full_amount","invoice_amount_remain","amount_paid_here"))
-        #receiptlineitem = ReceiptLineItem.objects.raw(
-        #    "SELECT * "
-        #    "FROM receipt_line_item LIT "
-        #    "  JOIN product P ON LIT.product_code = P.code "
-        #    "WHERE LIT.receipt_no = '{}'" .format(receipt_no)
-        #)
-
-        #list_lineitem = [] 
-        #for lineitem in receiptlineitem:
-        #    dict_lineitem = json.loads(str(lineitem))
-        #    dict_lineitem['product_name'] = lineitem.product_code.name
-        #    dict_lineitem['units'] = lineitem.product_code.units
-        #    list_lineitem.append(dict_lineitem)
+        receipt = list(Receipt.objects.filter(receipt_no=receipt_no)
+            .values('customer_code__name', 'receipt_no', 'date', 'customer_code', 'payment_method'
+            , 'payment_reference', 'total_received', 'remarks'))
+        receiptlineitem = list(ReceiptLineItem.objects.select_related('product_code')
+            .filter(receipt_no=receipt_no)
+            .values('receipt_no', 'item_no', 'invoice_no', 'amount_paid_here'))
 
         data = dict()
-        data['receipt'] = receipt[0]
+        data['receipt'] =receipt[0]
         data['receiptlineitem'] = receiptlineitem
         
-        #return JsonResponse(data)
-        return render(request, 'receipt/pdf.html', data)
-
-class ReceiptReport(View):
-    def get(self, request):
-
-        with connection.cursor() as cursor:
-            cursor.execute('SELECT r.receipt_no as "Receipt No", r.date as "Date" ,'
-                            'r.customer_code as "Customer Code", c.name as "Customer Name",'
-                            'r.payment_method as "Payment Method" , r.payment_reference as "Payment Reference",'
-                            'r.total_receipt as "Total Received", r.remarks as "Remarks" '
-                            'FROM receipt r LEFT JOIN customer c '
-                            'ON r.customer_code = c.customer_code '
-                            'ORDER BY r.receipt_no')
-            
-            row = dictfetchall(cursor)
-            column_name = [col[0] for col in cursor.description]
-
-        data = dict()
-        data['column_name'] = column_name
-        data['data'] = row
-        
-        #return JsonResponse(data)
         return render(request, 'receipt/report.html', data)
 
 class PaymentMethodList(View):

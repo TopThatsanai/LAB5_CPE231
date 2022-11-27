@@ -1,21 +1,21 @@
 
 var ROW_NUMBER = 5;
 
-Date.prototype.addDays = function(days) {
+Date.prototype.addDays = function (days) {
     var date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
     return date;
 }
 
 
-$(document).ready( function () {
+$(document).ready(function () {
 
     /* create datepicker */
-    $("#txt_ReceiptDate").datepicker({ 
-        dateFormat: 'dd/mm/yy' 
+    $("#txt_ReceiptDate").datepicker({
+        dateFormat: 'dd/mm/yy'
     });
-    
-    $('#btn_ReceiptDate').click(function() {
+
+    $('#btn_ReceiptDate').click(function () {
         $('#txt_ReceiptDate').datepicker('show');
     });
 
@@ -37,16 +37,16 @@ $(document).ready( function () {
         re_calculate_total_received();
     });
 
-    $('#txt_CustomerCode').change (function () {
+    $('#txt_CustomerCode').change(function () {
         var customer_code = $(this).val().trim();
 
         $.ajax({
-            url:  '/customer/detail/' + customer_code,
-            type:  'get',
-            dataType:  'json',
-            success: function  (data) {
-                $('#txt_CustomerCode').val(data.customers.customer_code);
-                $('#txt_CustomerName').val(data.customers.name);
+            url: '/customer/detail/' + customer_code,
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                $('#txt_CustomerCode').val(data.customers[0].customer_code);
+                $('#txt_CustomerName').val(data.customers[0].name);
             },
             error: function (xhr, status, error) {
                 $('#txt_CustomerName').val('');
@@ -54,14 +54,14 @@ $(document).ready( function () {
         });
     });
 
-    $('#txt_PaymentMethod').change (function () {
+    $('#txt_PaymentMethod').change(function () {
         var payment_method = $(this).val().trim();
 
         $.ajax({
-            url:  '/payment_method/detail/' + payment_method,
-            type:  'get',
-            dataType:  'json',
-            success: function  (data) {
+            url: '/payment_method/detail/' + payment_method,
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
                 // $('#txt_PaymentMethod').val(data.payment_methods.payment_method);
                 $('#txt_PaymentMethod').val(data.payment_methods.description);
             },
@@ -77,11 +77,11 @@ $(document).ready( function () {
         $(this).parents('tr').find('.order_no').html('*');
 
         $.ajax({
-            url:  '/product/list',
-            type:  'get',
-            dataType:  'json',
-            success: function  (data) {
-                let rows =  '';
+            url: '/product/list',
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                let rows = '';
                 var i = 1;
                 data.products.forEach(product => {
                     rows += `
@@ -110,11 +110,11 @@ $(document).ready( function () {
         $(this).parents('tr').find('.order_no').html('*');
 
         $.ajax({
-            url:  '/customer/list',
-            type:  'get',
-            dataType:  'json',
-            success: function  (data) {
-                let rows =  '';
+            url: '/customer/list',
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                let rows = '';
                 var i = 1;
                 data.customers.forEach(customer => {
                     rows += `
@@ -133,7 +133,7 @@ $(document).ready( function () {
                 $('#model_header_3').text('Note');
 
             },
-        });        
+        });
         // open popup
         $('#txt_modal_param').val('customer_code');
         $('#modal_form').modal();
@@ -145,11 +145,11 @@ $(document).ready( function () {
         $(this).parents('tr').find('.order_no').html('*');
 
         $.ajax({
-            url:  '/payment_method/list',
-            type:  'get',
-            dataType:  'json',
-            success: function  (data) {
-                let rows =  '';
+            url: '/payment_method/list',
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                let rows = '';
                 var i = 1;
                 data.payment_methods.forEach(payment_method => {
                     rows += `
@@ -168,7 +168,7 @@ $(document).ready( function () {
                 $('#model_header_3').text('Note');
 
             },
-        });        
+        });
         // open popup
         $('#txt_modal_param').val('payment');
         $('#modal_form').modal();
@@ -180,46 +180,44 @@ $(document).ready( function () {
         $(this).parents('tr').find('.order_no').html('*');
 
         $.ajax({
-            url:  '/receipt_line_item/list',
-            type:  'get',
-            dataType:  'json',
-            success: function  (data) {
-                let rows =  '';
+            url: '/invoice/list',
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                let rows = '';
                 var i = 1;
-                data.receipt_line_item.forEach(receipt_line_item => {
+                data.invoices.forEach(invoice => {
                     rows += `
                     <tr class="d-flex">
                         <td class='col-1'>${i++}</td>
-                        <td class='col-3'><a class='a_click' href='#'>${receipt_line_item.invoice_no_id}</a></td>
-                        <td class='col-5'>${receipt_line_item.invoice_date}</td>
-                        <td class='col-3'></td>
-                        <td class='hide'>${receipt_line_item.invoice_full_amount}</td>
-                        <td class='hide'>${receipt_line_item.invoice_amount_remain}</td>
-                        <td class='hide'>${receipt_line_item.amount_paid_here}</td>
+                        <td class='col-3'><a class='a_click' href='#'>${invoice.invoice_no}</a></td>
+                        <td class='col-5'>${invoice.date}</td>
+                        <td class='col-3'>${invoice.customer_code_id}</td>
+                        <td class='hide'>${invoice.amount_due}</td>
                     </tr>`;
                 });
                 $('#table_modal > tbody').html(rows);
 
                 $('#model_header_1').text('Invoice No.');
                 $('#model_header_2').text('Invoice Date');
-                $('#model_header_3').text('Note');
+                $('#model_header_3').text('Customer Code');
 
             },
-        });        
+        });
         // open popup
         $('#txt_modal_param').val('invoice_no');
         $('#modal_form').modal();
     });
 
-    $('table').on('focusin', 'td[contenteditable]', function() {
+    $('table').on('focusin', 'td[contenteditable]', function () {
         $(this).data('val', $(this).html());
-    }).on('input', 'td[contenteditable]', function() {
+    }).on('input', 'td[contenteditable]', function () {
         //re_calculate_total_received();
     }).on('keypress', 'td[contenteditable]', function (e) {
         if (e.keyCode == 13) {
             return false;
         }
-    }).on('focusout', 'td[contenteditable]', function() {
+    }).on('focusout', 'td[contenteditable]', function () {
         var prev = $(this).data('val');
         var data = $(this).html();
         if (!numberRegex.test(data)) {
@@ -231,7 +229,7 @@ $(document).ready( function () {
     });
 
     // return from modal (popup)
-    $('body').on('click', 'a.a_click', function() {
+    $('body').on('click', 'a.a_click', function () {
         //console.log($(this).parents('tr').html());
         //console.log($(this).parents('tr').find('td:nth-child(1)').html());
         var code = $(this).parents('tr').find('td:nth-child(2)').children().html();
@@ -244,16 +242,16 @@ $(document).ready( function () {
 
 
         if ($('#txt_modal_param').val() == 'invoice_no') {
-            $("#table_main tbody tr").each(function() {
+            $("#table_main tbody tr").each(function () {
                 if ($(this).find('.order_no').html() == '*') {
                     $(this).find('.project_code_1 > span').html(code);
                     $(this).find('.invoice_date').html(name);
                     $(this).find('.invoice_full_amount').html(option);
                     $(this).find('.invoice_amount_remain').html(code);
-                    
+
                 }
             });
-            
+
             re_calculate_total_received();
         } else if ($('#txt_modal_param').val() == 'customer_code') {
             $('#txt_CustomerCode').val(code);
@@ -295,15 +293,15 @@ $(document).ready( function () {
     });
     $('#btnEdit').click(function () {
         $.ajax({
-            url:  '/receipt/list',
-            type:  'get',
-            dataType:  'json',
-            success: function  (data) {
-                let rows =  '';
+            url: '/receipt/list',
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                let rows = '';
                 var i = 1;
                 data.receipts.forEach(receipt => {
                     var receipt_date = receipt.date;
-                    receipt_date = receipt_date.slice(0,10).split('-').reverse().join('/');
+                    receipt_date = receipt_date.slice(0, 10).split('-').reverse().join('/');
                     rows += `
                     <tr class="d-flex">
                         <td class='col-1'>${i++}</td>
@@ -312,9 +310,8 @@ $(document).ready( function () {
                         <td class='col-3'>${receipt.customer_code_id}</td>
                         <td class='hide'>${receipt.payment_method}</td>
                         <td class='hide'>${receipt.payment_reference}</td>
-                        <td class='hide'>${receipt.total_receipt}</td>
+                        <td class='hide'>${receipt.total_received}</td>
                         <td class='hide'>${receipt.remarks}</td>
-
                     </tr>`;
                 });
                 $('#table_modal > tbody').html(rows);
@@ -327,10 +324,10 @@ $(document).ready( function () {
                 $('#model_header_6').text('Total Receive');
                 $('#model_header_7').text('Remarks');
             },
-        });        
+        });
         // open popup
         $('#txt_modal_param').val('receipt_no');
-        $('#modal_form').modal();        
+        $('#modal_form').modal();
     });
     $('#btnSave').click(function () {
 
@@ -348,83 +345,85 @@ $(document).ready( function () {
         }
         if ($('#txt_ReceiptNo').val() == '<new>') {
             var token = $('[name=csrfmiddlewaretoken]').val();
-                  
+
             $.ajax({
-                url:  '/receipt/create',
-                type:  'post',
-                data: $('#form_receipt').serialize() + "&lineitem=" +lineitem_to_json(),
+                url: '/receipt/create',
+                type: 'post',
+                data: $('#form_receipt').serialize() + "&lineitem=" + lineitem_to_json(),
                 headers: { "X-CSRFToken": token },
-                dataType:  'json',
-                success: function  (data) {
-                    if (data.error) {
-                        alert(data.error);
+                dataType: 'json',
+                success: function (data) {
+                    if (data.error) {                               // if backend return error message, log it
+                        console.log(data.error);
+                        alert('การบันทึกล้มเหลว');
                     } else {
                         $('#txt_ReceiptNo').val(data.receipt.receipt_no)
                         alert('บันทึกสำเร็จ');
-                    }                    
+                    }
                 },
-            });  
+            });
         } else {
             var token = $('[name=csrfmiddlewaretoken]').val();
             console.log($('#form_receipt').serialize());
             console.log(lineitem_to_json());
             $.ajax({
-                url:  '/receipt/update/' + $('#txt_ReceiptNo').val(),
-                type:  'post',
-                data: $('#form_receipt').serialize() + "&lineitem=" +lineitem_to_json(),
+                url: '/receipt/update/' + $('#txt_ReceiptNo').val(),
+                type: 'post',
+                data: $('#form_receipt').serialize() + "&lineitem=" + lineitem_to_json(),
                 headers: { "X-CSRFToken": token },
-                dataType:  'json',
-                success: function  (data) {
-                    if (data.error) {
-                        alert(data.error);
+                dataType: 'json',
+                success: function (data) {
+                    if (data.error) {                           // if backend return error message, log it
+                        console.log(data.error);
+                        alert('การบันทึกล้มเหลว');
                     } else {
                         alert('บันทึกสำเร็จ');
                     }
                 },
-            }); 
+            });
         }
-        
+
     });
 
     $('#btnDelete').click(function () {
         if ($('#txt_ReceiptNo').val() == '<new>') {
-            alert ('ไม่สามารถลบ Receipt ใหม่ได้');
+            alert('ไม่สามารถลบ Receipt ใหม่ได้');
             return false;
         }
-        if (confirm ("คุณต้องการลบ Receipt No : '" + $('#txt_ReceiptNo').val() + "' ")) {
+        if (confirm("คุณต้องการลบ Receipt No : '" + $('#txt_ReceiptNo').val() + "' ")) {
             console.log('Delete ' + $('#txt_ReceiptNo').val());
             var token = $('[name=csrfmiddlewaretoken]').val();
             $.ajax({
-                url:  '/receipt/delete/' + $('#txt_ReceiptNo').val(),
-                type:  'post',
+                url: '/receipt/delete/' + $('#txt_ReceiptNo').val(),
+                type: 'post',
                 headers: { "X-CSRFToken": token },
-                dataType:  'json',
-                success: function  (data) {
+                dataType: 'json',
+                success: function (data) {
                     reset_form();
                 },
-            });            
+            });
         }
     });
-    $('#btnPdf').click(function () {
+
+    $('#btnPrint').click(function () {
         if ($('#txt_ReceiptNo').val() == '<new>') {
-            alert ('กรุณาระบุ Receipt No');
             return false;
         }
-        window.open('/receipt/pdf/' + $('#txt_ReceiptNo').val());
-    });
-    $('#btnPrint').click(function () {
-        window.open('/receipt/report');
+        window.open('/receipt/report/' + $('#txt_ReceiptNo').val());
     });
 
+    /* Start from */
+    reset_form ();
 });
 
-function lineitem_to_json () {
+
+function lineitem_to_json() {
     var rows = [];
     var i = 0;
-    $("#table_main tbody tr").each(function(index) {
+    $("#table_main tbody tr").each(function (index) {
         if ($(this).find('.project_code_1 > span').html() != '') {
             rows[i] = {};
-            rows[i]["item_no"] = (i+1);
+            rows[i]["item_no"] = (i + 1);
             rows[i]["invoice_no"] = $(this).find('.project_code_1 > span').html();
             rows[i]["invoice_date"] = $(this).find('.invoice_date').html();
             rows[i]["invoice_full_amount"] = $(this).find('.invoice_full_amount').html();
@@ -440,25 +439,28 @@ function lineitem_to_json () {
     return JSON.stringify(obj);
 }
 
-function get_receipt_detail (receipt_no) {
+function get_receipt_detail(receipt_no) {
     $.ajax({
-        url:  '/receipt/detail/' + encodeURIComponent(receipt_no),
-        type:  'get',
-        dataType:  'json',
-        success: function  (data) {
+        url: '/receipt/detail/' + encodeURIComponent(receipt_no),
+        type: 'get',
+        dataType: 'json',
+        success: function (data) {
             //console.log(data.receiptlineitem.length);
 
             reset_table();
-            for(var i=ROW_NUMBER;i<data.receiptlineitem.length;i++) {
+            // $("#txt_PaymentMethod").val(data.receipt[0].payment_method)
+            // $("#txt_PaymentReference").val(data.receipt[0].payment_reference)             
+            // $("#txt_Remarks").val(data.receipt[0].remarks)
+            for (var i = ROW_NUMBER; i < data.receiptlineitem.length; i++) {
                 $('.table-add').click();
             }
             var i = 0;
-            $("#table_main tbody tr").each(function() {
+            $("#table_main tbody tr").each(function () {
                 if (i < data.receiptlineitem.length) {
                     $(this).find('.project_code_1 > span').html(data.receiptlineitem[i].invoice_no);
-                    $(this).find('.invoice_date').html(data.receiptlineitem[i].invoice_date);
-                    $(this).find('.invoice_full_amount').html(data.receiptlineitem[i].invoice_full_amount);
-                    $(this).find('.invoice_amount_remain').html(data.receiptlineitem[i].invoice_amount_remain);
+                    $(this).find('.invoice_date').html(data.receiptlineitem[i].invoice_no__date);
+                    $(this).find('.invoice_full_amount').html(data.receiptlineitem[i].invoice_no__amount_due);
+                    // $(this).find('.invoice_amount_remain').html(data.receiptlineitem[i].invoice_amount_remain);
                     $(this).find('.amount_paid_here').html(data.receiptlineitem[i].amount_paid_here);
 
                 }
@@ -469,22 +471,22 @@ function get_receipt_detail (receipt_no) {
     });
 }
 
-function re_calculate_total_received () {
+function re_calculate_total_received() {
     var total_received = 0;
-    $("#table_main tbody tr").each(function() {
+    $("#table_main tbody tr").each(function () {
 
         var invoice_no = $(this).find('.project_code_1 > span').html();
         //console.log (invoice_no);
 
         var invoice_full_amount = $(this).find('.invoice_full_amount').html();
         $(this).find('.invoice_full_amount').html(((invoice_full_amount)));
-        
+
         var amount_paid_here = $(this).find('.amount_paid_here').html();
         $(this).find('.amount_paid_here').html(parseInt(amount_paid_here));
 
         if (invoice_no != '') {
-                var invoice_amount_remain = invoice_full_amount - amount_paid_here
-                var amount_paid_here = invoice_full_amount - invoice_amount_remain
+            var invoice_amount_remain = invoice_full_amount - amount_paid_here
+            var amount_paid_here = invoice_full_amount - invoice_amount_remain
             $(this).find('.invoice_amount_remain').html(formatNumber(invoice_amount_remain));
             total_received += amount_paid_here;
         }
@@ -500,8 +502,8 @@ function reset_form() {
     $('#txt_ReceiptNo').val('<new>');
 
     reset_table();
-    
-    $('#txt_ReceiptDate').val(new Date().toJSON().slice(0,10).split('-').reverse().join('/'));
+
+    $('#txt_ReceiptDate').val(new Date().toJSON().slice(0, 10).split('-').reverse().join('/'));
 
     $('#txt_CustomerCode').val('');
     $('#txt_CustomerName').val('');
@@ -515,43 +517,43 @@ function reset_form() {
 
 function reset_table() {
     $('#table_main > tbody').html('');
-    for(var i=1; i<= ROW_NUMBER; i++) {
+    for (var i = 1; i <= ROW_NUMBER; i++) {
         $('.table-add').click();
-    }    
+    }
 }
 
-function re_order_no () {
+function re_order_no() {
     var i = 1;
-    $("#table_main tbody tr").each(function() {
+    $("#table_main tbody tr").each(function () {
         $(this).find('.order_no').html(i);
         i++;
     });
 }
 
 
-function disable_ui () {
+function disable_ui() {
     $('#txt_ReceiptDate').attr("disabled", "disabled");
     $('#btn_ReceiptDate').attr("disabled", "disabled");
 }
 
-function enable_ui () {
+function enable_ui() {
     $('#txt_ReceiptDate').removeAttr("disabled");
     $('#btn_ReceiptDate').removeAttr("disabled");
 }
 
 
 
-function formatNumber (num) {
+function formatNumber(num) {
     if (num === '') return '';
-    num = parseFloat(num); 
+    num = parseFloat(num);
     return num.toFixed(2).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 }
 
-function isInt(n){
+function isInt(n) {
     return Number(n) === n && n % 1 === 0;
 }
 
-function isFloat(n){
+function isFloat(n) {
     return Number(n) === n && n % 1 !== 0;
 }
 

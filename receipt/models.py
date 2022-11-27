@@ -53,15 +53,15 @@ class InvoiceLineItem(models.Model):
         unique_together = (("invoice_no", "item_no"),)
         managed = False
     def __str__(self):
-        return '{"invoice_no":"%s","iten_no":"%s","product_code":"%s","quantity":%s,"unit_price":"%s","product_total":"%s"}' % (self.invoice_no, self.item_no, self.product_code, self.quantity, self.unit_price, self.product_total)
+        return '{"invoice_no":"%s","item_no":"%s","product_code":"%s","quantity":%s,"unit_price":"%s","product_total":"%s"}' % (self.invoice_no, self.item_no, self.product_code, self.quantity, self.unit_price, self.product_total)
 
 class Receipt(models.Model):
     receipt_no = models.CharField(max_length=10, primary_key=True)
-    created_at = models.DateField(null=True)
+    date = models.DateField(null=True)
     customer_code = models.ForeignKey(Customer, on_delete=models.CASCADE, db_column='customer_code')
     payment_method = models.CharField(max_length=10, null=True, blank=True)
     payment_reference = models.CharField(max_length=100, null=True, blank=True)
-    total_receipt = models.FloatField(null=True, blank=True)
+    total_received = models.FloatField(null=True, blank=True)
     remarks = models.CharField(max_length=100, null=True, blank=True)
     class Meta:
         db_table = "receipt"
@@ -73,7 +73,6 @@ class ReceiptLineItem(models.Model):
     receipt_no = models.ForeignKey(Receipt, primary_key=True, on_delete=models.CASCADE, db_column='receipt_no')
     item_no = models.IntegerField()
     invoice_no = models.ForeignKey(Invoice, on_delete=models.CASCADE, db_column='invoice_no')
-    invoice_date = models.DateField(null=True)
     amount_paid_here = models.FloatField(null=True, blank=True)
     class Meta:
         db_table = "receipt_line_item"

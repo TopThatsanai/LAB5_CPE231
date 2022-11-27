@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block sub_menu %}
+<nav class="navbar navbar-expand-sm navbar-dark" style="background-color:#56565F">
+
+    <a class="nav-link" href="/report">Report</a>
+    <a class="nav-link " href="/report/ReportListAllInvoices">Report list all invoices</a>
+    <a class="nav-link " href="/report/ReportProductsSold">Report products sold</a>
+    <a class="nav-link table-active" href="/report/ReportListAllProducts">Report list all products</a>
+    <a class="nav-link" href="/report/ReportListAllReceipts">Report list all receipts</a>
+    <a class="nav-link" href="/report/ReportUnpaidInvoices">Report unpaid invoices</a>
+</nav>
+
+    <h1 style="font-size:300%; text-align:center;" >Report</h1>
+{% endblock %}
+
+{% block content %}
+    
+    <table class='table'>
+        <tr>
+            <th>#</th>
+            {% for name in column_name %}
+            <th>{{ name }} </th>
+            {% endfor %}
+        </tr>
+    {% for lineitem in data %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ lineitem.code }}</td>
+            <td>{{ lineitem.name }}</td>
+            <td>{{ lineitem.units }}</td>
+            <td>{{ lineitem.product_type_id }}</td>
+        <tr>
+    {% endfor %}
+    
+    {% endblock %}
+    
+
+</body>
+</html>

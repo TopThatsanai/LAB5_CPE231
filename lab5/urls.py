@@ -18,6 +18,7 @@ from django.urls import path
 
 from invoice import views
 from receipt import views as receipt_views
+from report import views as report_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,9 +26,8 @@ urlpatterns = [
     path('product/list', views.ProductList.as_view(), name='product_list'),
     path('customer/list', views.CustomerList.as_view(), name='customer_list'),
     path('customer/detail/<customer_code>', views.CustomerDetail.as_view(), name='customer_detail'),
-
     path('payment_method/detail/<payment_metod>',receipt_views.PaymentMethodDetail.as_view(), name='paymentmedthod_detail'),
-    path('payment_method/list', receipt_views.PaymentMethodList.as_view(), name='paymentmethod_list'),
+
 
     path('invoice/list', views.InvoiceList.as_view(), name='invoice_list'),
     path('invoice/detail/<str:pk>/<str:pk2>', views.InvoiceDetail.as_view(), name='invoice_detail'),
@@ -44,9 +44,14 @@ urlpatterns = [
     path('receipt/create', receipt_views.ReceiptCreate.as_view(), name='receipt_create'),
     path('receipt/update/<str:pk>/<str:pk2>', receipt_views.ReceiptUpdate.as_view(), name='receipt_update'),
     path('receipt/delete/<str:pk>/<str:pk2>', receipt_views.ReceiptDelete.as_view(), name='receipt_delete'),
-    path('receipt/pdf/<str:pk>/<str:pk2>', receipt_views.ReceiptPDF.as_view(), name='receipt_pdf'),
-    path('receipt/report', receipt_views.ReceiptReport.as_view(), name='receipt_report'),
+    path('receipt/report/<str:pk>/<str:pk2>', receipt_views.ReceiptReport.as_view(), name='receipt_report'),
+    path('payment_method/list', receipt_views.PaymentMethodList.as_view(), name='paymentmethod_list'),
+    path('receipt_line_item/list', receipt_views.Receipt_line_item_List.as_view(), name = 'receiptlineitem_list'),
 
-    path('receipt_line_item', receipt_views.index, name='index'), 
-    path('receipt_line_item/list', receipt_views.Receipt_line_item_List.as_view(), name='receipt_line_item'),
+    path('report', report_views.index, name='index'),
+    path('report/ReportListAllInvoices', report_views.ReportListAllInvoices),
+    path('report/ReportProductsSold', report_views.ReportProductsSold),
+    path('report/ReportListAllProducts', report_views.ReportListAllProducts),
+    path('report/ReportListAllReceipts', report_views.ReportListAllReceipt),
+    path('report/ReportUnpaidInvoices', report_views.ReportUnpaidInvoices),
 ]

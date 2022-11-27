@@ -1,41 +1,25 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% block title %}Invoice Forms{% endblock %}
 
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'css/jquery-ui.min.css' %}">
-
-    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/glyphicon.css' %}">
-    
+{% block script %}
     <script src="{% static 'js/invoice.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'css/cpe.css' %}">
+{% endblock %}
 
-    <title>Invoice Form</title>
- 
-    
-</head>
-<body>
+{% block content %}
 
-    <nav class="navbar navbar-expand-sm bg-info navbar-dark">
+
+<nav class="navbar navbar-expand-sm navbar-dark" style="background-color:#56565F">
     <!-- Links -->
-    <ul class="navbar-nav">
-        <li class="nav-item">
-        <a class="nav-link" href="#">Inovoice Form</a>
-        </li>
-    </ul>
-    <ul class="navbar-nav">
-        <li class="nav-item">
-    <a class="nav-link" href="receipt#">Receipt Form</a>
-        </li>
-    </ul>
+
+        <ul class="navbar-nav">
+            <li class="nav-item">
+            <a class="nav-link table-active" href="#">Invoice Form</a>
+            </li>
+        </ul>
     </nav>
+
     <div style="font-size:0;" class="bg-secondary">
         <input type='image' id='btnNew' src="{% static 'images/newOn.gif' %}"  alt="newOn">
         <input type='image' id='btnEdit' src="{% static 'images/editOn.gif' %}"  alt="editOn">
@@ -198,5 +182,4 @@
     </div>
   </div>
 </div>
-</body>
-</html>
+{% endblock %}
