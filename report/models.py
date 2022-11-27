@@ -63,11 +63,11 @@ class Payment_method(models.Model):
 
 class receipt(models.Model):
     receipt_no = models.CharField(max_length=10, primary_key=True)
-    created_at = models.DateField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
     customer_code = models.CharField(max_length=10, null=True)
     payment_method = models.CharField(max_length=10, null=True)
     payment_reference = models.CharField(max_length=100, null=True)
-    total_recieved = models.FloatField(null=True)
+    total_received = models.FloatField(null=True)
     remarks = models.CharField(max_length=100, null=True)
     class Meta:
         db_table = "receipt"
@@ -98,5 +98,5 @@ class InvoiceLineItem(models.Model):
         unique_together = (("invoice_no", "item_no"),)
         managed = False
     def __str__(self):
-        return '{"invoice_no":"%s","iten_no":"%s","product_code":"%s","product_name":"%s","quantity":%s,"unit_price":"%s","product_total":"%s"}' % (self.invoice_no, self.item_no, self.product_code, self.product_code.name, self.quantity, self.unit_price, self.product_total)
+        return '{"invoice_no":"%s","item_no":"%s","product_code":"%s","product_name":"%s","quantity":%s,"unit_price":"%s","product_total":"%s"}' % (self.invoice_no, self.item_no, self.product_code, self.product_code.name, self.quantity, self.unit_price, self.product_total)
 

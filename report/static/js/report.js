@@ -407,15 +407,12 @@ $(document).ready( function () {
             });            
         }
     });
-    $('#btnPdf').click(function () {
+    $('#btnPrint').click(function () {
         if ($('#txt_ReceiptNo').val() == '<new>') {
             alert ('กรุณาระบุ Receipt No');
             return false;
         }
-        window.open('/receipt/pdf/' + $('#txt_ReceiptNo').val());
-    });
-    $('#btnPrint').click(function () {
-        window.open('/receipt/report');
+        window.open('/receipt/report/' + $('#txt_ReceiptNo').val());
     });
 
 });

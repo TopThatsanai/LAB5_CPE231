@@ -35,7 +35,7 @@
     </div>
     <div class='row'>
         <div class='col-sm'>
-            Total Received: {{ receipt.total_receipt }}<br>
+            Total Received: {{ receipt.total_received }}<br>
         </div>
     </div>
     <table class='table'>
@@ -51,15 +51,15 @@
         <tr>
             <td>{{ forloop.counter }}</td>
             <td>{{ lineitem.invoice_no }}</td>
-            <td>{{ lineitem.invoice_no__date }}</td>
-            <td>{{ lineitem.invoice_no__amount_due }}</td>
-            <td>{{ lineitem.iar }}</td>
+            <td>{{ lineitem.invoice_date }}</td>
+            <td>{{ lineitem.invoice_full_amount }}</td>
+            <td>{{ lineitem.invoice_amount_remain }}</td>
             <td>{{ lineitem.amount_paid_here }}</td>
         <tr>
     {% endfor %}
         <tr>
             <td colspan='4'></td>
-            <td align='right'>Total Recevied</td><td >{{ receipt.total_receipt }}</td>
+            <td align='right'>Total Recevied</td><td >{{ receipt.total_received }}</td>
         </tr>
     </table>
 </div>

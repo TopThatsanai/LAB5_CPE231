@@ -44,8 +44,7 @@ urlpatterns = [
     path('receipt/create', receipt_views.ReceiptCreate.as_view(), name='receipt_create'),
     path('receipt/update/<str:pk>/<str:pk2>', receipt_views.ReceiptUpdate.as_view(), name='receipt_update'),
     path('receipt/delete/<str:pk>/<str:pk2>', receipt_views.ReceiptDelete.as_view(), name='receipt_delete'),
-    path('receipt/pdf/<str:pk>/<str:pk2>', receipt_views.ReceiptPDF.as_view(), name='receipt_pdf'),
-    path('receipt/report', receipt_views.ReceiptReport.as_view(), name='receipt_report'),
+    path('receipt/report/<str:pk>/<str:pk2>', receipt_views.ReceiptReport.as_view(), name='receipt_report'),
     path('payment_method/list', receipt_views.PaymentMethodList.as_view(), name='paymentmethod_list'),
     path('receipt_line_item/list', receipt_views.Receipt_line_item_List.as_view(), name = 'receiptlineitem_list'),
 

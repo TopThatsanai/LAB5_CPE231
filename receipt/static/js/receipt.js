@@ -312,7 +312,6 @@ $(document).ready(function () {
                         <td class='hide'>${receipt.payment_reference}</td>
                         <td class='hide'>${receipt.total_received}</td>
                         <td class='hide'>${receipt.remarks}</td>
-
                     </tr>`;
                 });
                 $('#table_modal > tbody').html(rows);
@@ -405,7 +404,18 @@ $(document).ready(function () {
             });
         }
     });
+
+    $('#btnPrint').click(function () {
+        if ($('#txt_ReceiptNo').val() == '<new>') {
+            return false;
+        }
+        window.open('/receipt/report/' + $('#txt_ReceiptNo').val());
+    });
+
+    /* Start from */
+    reset_form ();
 });
+
 
 function lineitem_to_json() {
     var rows = [];
